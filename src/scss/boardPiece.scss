@@ -1,0 +1,25 @@
+.board-piece {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    left: 7px;
+    cursor: pointer;
+}
+.dark {
+    background-color: rgb(58, 57, 57);
+    border: 12px solid black;
+}
+.light {
+    background-color: rgb(78, 77, 77);
+    border: 12px solid rgb(167, 167, 167);
+}
+.dark-king {
+    box-shadow: 4px 4px rgb(22, 22, 22);
+}
+
+.light-king {
+    box-shadow: 4px 4px rgb(99, 98, 98);
+}
+

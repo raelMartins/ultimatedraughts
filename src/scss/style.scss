@@ -1,7 +1,18 @@
-$backgroundColor: teal;
-$color: whitesmoke;
+//IMPORTS
+@import './variables.scss';
+@import './board.scss';
+@import './boardPiece.scss';
 
 body {
-    background-color: $backgroundColor;
-    color: $color;
+    background-image: url('../img/wallpaperflare.com_wallpaper.jpg');
+    background-position: center;
+    background-repeat: none;
+    background-size: cover;
+    color: whitesmoke;
 }
+
+h4 {
+    text-align: center;
+    padding: 20px;
+}
+

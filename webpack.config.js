@@ -20,6 +20,17 @@ module.exports = {
             {
                 test: /\.(sc|sa|c)ss$/,
                 use: [{loader: "style-loader"}, {loader: 'css-loader'}, {loader: "sass-loader"}]
+            },
+            {
+                test: /\.(png|jpe?g|gif|svg)$/,
+                use: [
+                    {
+                        loader: "file-loader",
+                        options: {
+                            outputPath: 'images'
+                        }
+                    }
+                ]
             }
         ]
     },

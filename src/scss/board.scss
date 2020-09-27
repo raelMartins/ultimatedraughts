@@ -1,0 +1,29 @@
+.board {
+    width: 430px;
+    margin: 40px 75px;
+    padding: 15px;
+    display: grid;
+    background-color: $backgroundColor;
+    border-radius: 5px;
+    grid-template-columns: repeat(8, 50px);
+    grid-template-rows: repeat(8, 50px);
+    .board-cell {
+        position: relative;
+    }
+    // :nth-child(-2n+8), 
+    // :nth-child(8) ~ :nth-child(-2n+15), 
+    // :nth-child(16) ~ :nth-child(-2n+24), 
+    // :nth-child(24) ~ :nth-child(-2n+31), 
+    // :nth-child(32) ~ :nth-child(-2n+40), 
+    // :nth-child(40) ~ :nth-child(-2n+47), 
+    // :nth-child(48) ~ :nth-child(-2n+56), 
+    // :nth-child(56) ~ :nth-child(-2n+63){
+    //     background-color: $cellColor;
+    // }
+    .gameplay-cell {
+        background-color: $cellColor;
+    }
+    .blank-cell {
+        background-color: $inactiveCell;
+    }
+}
