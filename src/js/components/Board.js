@@ -15,9 +15,17 @@ const Board = () => {
     }
 
     return(
-        <div className="board">
-            { boardCells }
-        </div>
+        <>
+            <div className="player-name">
+                <h5>Player 1</h5>
+            </div>
+            <div className="board">
+                { boardCells }
+            </div>
+            <div className="player-name">
+                <h5>Player 2</h5>
+            </div>
+        </>
     )
 }
 

@@ -1,12 +1,14 @@
 import React from 'react';
 import Board from './components/Board';
-import BoardPiece from './components/BoardPiece';
+import GameTitle from './components/GameTitle';
+import Instructions from './components/Instructions';
 
 const App = () => {
     return(
         <>
-        <h4>THE ULTIMATE DRAUGHTS/CHECKERS GAME</h4>
+        <GameTitle />
         <Board />
+        <Instructions />
         </>
     )
 }

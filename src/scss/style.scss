@@ -4,11 +4,13 @@
 @import './boardPiece.scss';
 
 body {
-    background-image: url('../img/wallpaperflare.com_wallpaper.jpg');
+    max-height: 100vh;
+    background-image: url('../img/backgroundwallpaper.jpg');
     background-position: center;
     background-repeat: none;
     background-size: cover;
     color: whitesmoke;
+    font-family: 'MedievalSharp', cursive;
 }
 
 h4 {
