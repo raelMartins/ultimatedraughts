@@ -7,8 +7,10 @@ const App = () => {
     return(
         <>
         <GameTitle />
-        <Board />
-        <Instructions />
+        <div className="row">
+            <Board />
+            <Instructions />
+        </div>
         </>
     )
 }

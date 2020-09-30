@@ -15,7 +15,7 @@ const Board = () => {
     }
 
     return(
-        <>
+        <div className="left col-6">
             <div className="player-name">
                 <h5>Player 1</h5>
             </div>
@@ -25,7 +25,7 @@ const Board = () => {
             <div className="player-name">
                 <h5>Player 2</h5>
             </div>
-        </>
+        </div>
     )
 }
 

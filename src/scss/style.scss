@@ -5,7 +5,9 @@
 
 body {
     max-height: 100vh;
-    background-image: url('../img/backgroundwallpaper.jpg');
+    max-width: 100vw;
+    overflow-x: hidden;
+    background-image: url('../img/background.jpg');
     background-position: center;
     background-repeat: none;
     background-size: cover;
@@ -13,8 +15,38 @@ body {
     font-family: 'MedievalSharp', cursive;
 }
 
-h4 {
+.game-title {
+    background-color: lighten($backgroundColor,7);
+    .title {
+        text-align: center;
+        padding: 20px;
+    }
+}
+.left {
+    margin-top: 15px;
     text-align: center;
-    padding: 20px;
+    color: lighten($backgroundColor, 4)
 }
 
+.right {
+    margin-top: 15px;
+    text-align: center;
+    .instructions {
+        height: 500px;
+        // min-height: 450px;
+        background-image: url('../img/rulesscroll.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: cover;
+        // min-width: 350px;
+        width: 400px;
+        margin: 20px auto;
+        padding-top: 65px;
+        color: $backgroundColor;
+        .instructions-text {
+            overflow-y: auto;
+            width: 65%;
+            margin: auto;
+        }
+    }
+}
