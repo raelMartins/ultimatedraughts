@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { GamePlayContext } from '../contexts/GamePlayContext';
 import BoardPiece from './BoardPiece';
 
 const BoardCell = props => {
+    const { darkPieces, lightPieces } = useContext(GamePlayContext)
+    // useEffect (() => {
+    //     console.log('Something changed')
+    // },[darkPieces, lightPieces])
     return (
         <div className={`board-cell ${props.cellType}`} id={props.id}>
-            {props.cellType === "gameplay-cell" && props.id < 24 ? <BoardPiece pieceColor = "light light-king"/> : null}
-            {props.cellType === "gameplay-cell" && props.id >= 40 ? <BoardPiece pieceColor = "dark dark-king"/> : null}
+            {darkPieces.includes(props.id) ? <BoardPiece pieceColor = "dark" id={props.id}/> : null}
+            {lightPieces.includes(props.id) ? <BoardPiece pieceColor = "light" id={props.id}/>: null}
         </div>
     )
 }
