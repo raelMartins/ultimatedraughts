@@ -4,9 +4,6 @@ import BoardPiece from './BoardPiece';
 
 const BoardCell = props => {
     const { darkPieces, lightPieces } = useContext(GamePlayContext)
-    // useEffect (() => {
-    //     console.log('Something changed')
-    // },[darkPieces, lightPieces])
     return (
         <div className={`board-cell ${props.cellType}`} id={props.id} onClick={props.cellType === "possible-cell" ? () => props.movePiece(props.id) : null}>
             {darkPieces.includes(props.id) ? <BoardPiece pieceColor = "dark" id={props.id}/> : null}
