@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { GamePlayContext } from '../contexts/GamePlayContext';
 
 const Board = () => {
@@ -15,6 +15,7 @@ const Board = () => {
             <div className="player-name">
                 <h5>Player 2</h5>
             </div>
+            
         </div>
     )
 }

@@ -26,4 +26,15 @@
     .blank-cell {
         background-color: $inactiveCell;
     }
+    .possible-cell {
+        background-color: teal;
+        border: none;
+        cursor: pointer;
+        animation: changeBackground 4s ease  infinite;
+    }
+    @keyframes changeBackground {
+        25%{ background-color: rgba(0, 128, 128, 0.486);}
+        75%{background-color: rgba(0, 0, 255, 0.479);}
+    }
+    
 }

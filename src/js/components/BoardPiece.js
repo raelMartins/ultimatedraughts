@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { GamePlayContext } from '../contexts/GamePlayContext';
 
 const BoardPiece = props => {
-    const {removeDarkPiece, removeLightPiece, darkPieces, lightPieces} = useContext(GamePlayContext);
+    const { displayMove } = useContext(GamePlayContext);
+    // const {removeDarkPiece, removeLightPiece, darkPieces, lightPieces} = useContext(GamePlayContext);
     // const removePiece = () => {
     //     if(darkPieces.includes(props.id)) {
     //         removeDarkPiece(props.id)
@@ -13,7 +14,7 @@ const BoardPiece = props => {
     //     }
     // } 
     return(
-        <div className={`board-piece ${props.pieceColor}`} id={props.id}></div>
+        <div className={`board-piece ${props.pieceColor}`} id={props.id} onClick={() => displayMove(props.id)}></div>
     )
 }
 
