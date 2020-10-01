@@ -30,11 +30,11 @@
         background-color: teal;
         border: none;
         cursor: pointer;
-        animation: changeBackground 4s ease  infinite;
+        animation: changeBackground 1s ease  infinite;
     }
     @keyframes changeBackground {
-        25%{ background-color: rgba(0, 128, 128, 0.486);}
-        75%{background-color: rgba(0, 0, 255, 0.479);}
+        from{ background-color: darken($color:  rgba(0, 128, 128, 0.486), $amount: 2);}
+        to{background-color: lighten($color:  rgba(0, 128, 128, 0.486), $amount: 6);}
     }
     
 }

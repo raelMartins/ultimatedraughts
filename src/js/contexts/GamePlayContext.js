@@ -21,7 +21,7 @@ const GamePlayContextProvider = (props) => {
             if(gamePlayCells.includes(i) && !possibleCells.includes(gamePlayCells.indexOf(i) )) {
                 boardCells[i] = <BoardCell key={i} id={ids++} cellType="gameplay-cell"/>
             }
-            //check if one of the cells is one you waant to move to
+            //check if one of the cells is one you want to move to
             else if(possibleCells.includes(gamePlayCells.indexOf(i))) {
                 boardCells[i] = <BoardCell key={i} id={ids++} cellType="possible-cell" movePiece={movePiece}/>
             }
@@ -36,14 +36,25 @@ const GamePlayContextProvider = (props) => {
     //this function displays the cell to which you want to move
     const displayMove = (id) => {
         //check the position of the cell as it differs for each element and give it the appropriate rules
+        
+        //MOVEMENT
         const edgeCells = [3, 4, 11, 12, 19, 20, 27, 28];
         const lightmidCells = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31]
         const darkmidCells = [0, 1, 2, 8, 9, 10, 16, 17, 18, 24, 25, 26]
 
+        //CAPTURING
+        const LightNormalCapture = [1, 2, 5, 6, 9, 10, 13, 14, 17, 18, 21, 22]
+        const DarkNormalCapture = [30, 29, 26, 25, 22, 21, 18, 17, 14, 13, 10, 9]
+        const LightRightCapture = [0, 4, 8, 12, 16, 20]
+        const DarkRightCapture = [28, 24, 20, 16, 12, 8]
+        const LightLeftCapture = [3, 7, 11, 15, 19, 23]
+        const DarkLeftCapture = [31, 27, 23, 19, 15, 11]
+
         //create options to move to
-        let opt1, opt2;
+        let opt1, opt2, opt3, opt4;
         //check if its a dark piece
         if(darkPieces.includes(id)) {
+            //---- MOVEMENT ----//
             //if it's a cell by the edge, then only give it one option
             if (edgeCells.includes(id)) {
                 opt1 = id - 4
@@ -59,9 +70,25 @@ const GamePlayContextProvider = (props) => {
                 opt1 = id - 4
                 opt2 = id - 5
             }
+            
+            //CAPTURING
+            if(DarkNormalCapture.includes(id)) {
+                opt3 = id - 7
+                opt4 = id - 9
+            }
+            else if(DarkRightCapture.includes(id)) {
+                opt3 = id - 7
+                opt4 = null
+            }
+            else if(DarkLeftCapture.includes(id)) {
+                opt3 = null
+                opt4 = id - 9
+            }
+
         }
         //check if it's a light piece
         else if(lightPieces.includes(id)) {
+            //---- MOVEMENT ----//
             //if it is an edge cell , give it only one option
             if(edgeCells.includes(id)) {
                 opt1 = id + 4
@@ -77,12 +104,49 @@ const GamePlayContextProvider = (props) => {
                 opt1 = id + 4
                 opt2 = id + 5
             }
+
+            //CAPTURING
+            if(LightNormalCapture.includes(id)) {
+                opt3 = id + 7
+                opt4 = id + 9
+            }
+            else if(LightRightCapture.includes(id)) {
+                opt3 = null
+                opt4 = id + 9
+            }
+            else if(LightLeftCapture.includes(id)) {
+                opt3 = id + 7
+                opt4 = null
+            }
         }
         //add the two possible cells to state
-        setPossibleCells([opt1, opt2])
+        //check the availability of possibile cells
+
+        //check that both cells are blocked by other pieces
+        if((lightPieces.includes(opt1) && lightPieces.includes(opt2)) || (darkPieces.includes(opt1) && darkPieces.includes(opt2))) {
+            setPossibleCells([])
+        }
+        //check that cells are blocked by pieces of different colors
+        else if((darkPieces.includes(opt1) && lightPieces.includes(opt2)) || (lightPieces.includes(opt1) && darkPieces.includes(opt2))) {
+            setPossibleCells([])
+        }
+        //check that one cell is blocked by another piece
+        else if((lightPieces.includes(opt1) && !lightPieces.includes(opt2)) || (darkPieces.includes(opt1) && !darkPieces.includes(opt2)) ) {
+            setPossibleCells([opt2])
+        }
+        //check that one cell is blocked by another piece
+        else if((lightPieces.includes(opt2) && !lightPieces.includes(opt1)) || (darkPieces.includes(opt2) && !darkPieces.includes(opt1)) ) {
+            setPossibleCells([opt1])
+        }
+        //if not blocked
+        else{
+            setPossibleCells([opt1, opt2])
+        }
         //add the id of the piece to be moved
         setToBeMoved(id)
     }
+
+
     //function for removing pieces
     const removePiece = id => {
         if(darkPieces.includes(id)){
@@ -91,6 +155,9 @@ const GamePlayContextProvider = (props) => {
         else if(lightPieces.includes(id)) {
             return lightPieces.filter(piece => piece !== id)
         }
+    }
+    const capturePiece = id => {
+        
     }
 
     //function for moving pieces
