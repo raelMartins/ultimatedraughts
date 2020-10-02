@@ -33,6 +33,36 @@ const GamePlayContextProvider = (props) => {
         //return all the cells
         return boardCells;    
     }
+
+    const capturePiece = id => {
+        
+    }
+
+    //function for moving pieces
+    const movePiece = (newid) =>{
+        if(darkPieces.includes(toBeMoved)) {
+            //create a new array without the piece you want to move then add the new piece to the array and set to state
+            const newDark = removePiece(toBeMoved)
+            setDarkPiece([...newDark, newid])
+        }else if(lightPieces.includes(toBeMoved)) {
+            //create a new array without the piece you want to move then add the new piece to the array and set to state
+            const newLight = removePiece(toBeMoved)
+            setLightPiece([...newLight, newid])
+        }
+        //set state of possible options to normal which is none
+        setPossibleCells([])
+    }
+
+    //function for removing pieces
+    const removePiece = id => {
+        if(darkPieces.includes(id)){
+            return darkPieces.filter(piece => piece !== id)
+        }
+        else if(lightPieces.includes(id)) {
+            return lightPieces.filter(piece => piece !== id)
+        }
+    }
+
     //this function displays the cell to which you want to move
     const displayMove = (id) => {
         //check the position of the cell as it differs for each element and give it the appropriate rules
@@ -119,60 +149,184 @@ const GamePlayContextProvider = (props) => {
                 opt4 = null
             }
         }
-        //add the two possible cells to state
+        
         //check the availability of possibile cells
+        let possibilities ;
+        //if it's a dark piece blocked by two dark pieces nothing happens
+        if(darkPieces.includes(id) && darkPieces.includes(opt1) && darkPieces.includes(opt2)) {
+            possibilities = []
+        }
+        //if it's a light piece blocked by two light pieces, nothing happens
+        else if(lightPieces.includes(id) && lightPieces.includes(opt1) && lightPieces.includes(opt2)) {
+            possibilities = []
+        }
+        //if it's a dark piece blocked by two light pieces, opportunity to capture, check whether possibilities are available
+        else if(darkPieces.includes(id) && lightPieces.includes(opt1) && lightPieces.includes(opt2)) {
+            //if the two capture options are blocked by either two white or two black, nothing happens
+            if((lightPieces.includes(opt3) && lightPieces.includes(opt4)) || (darkPieces.includes(opt3) && darkPieces.includes(opt4))) {
+                possibilities = []
+            }
+            //if a light piece or dark piece blocks one option, go for the other
+            else if((!lightPieces.includes(opt3) && lightPieces.includes(opt4)) || (!darkPieces.includes(opt3) && darkPieces.includes(opt4))) {
+                possibilities = [opt3]
+            }
+            //if a light piece or dark piece blocks one option, go for the other
+            else if((!lightPieces.includes(opt4) && lightPieces.includes(opt3)) || (!darkPieces.includes(opt4) && darkPieces.includes(opt3))){
+                possibilities = [opt4]
+            }
+            //if nothing blocks it, go for it
+            else {
+                possibilities = [opt3, opt4]
+            }
+        }
+       //if it's a light piece blocked by two dark pieces, opportunity to capture, check whether possibilities are available
+        else if(lightPieces.includes(id) && darkPieces.includes(opt1) && darkPieces.includes(opt2)) {
+            //if the two capture options are blocked by either two white or two black, nothing happens
+            if((lightPieces.includes(opt3) && lightPieces.includes(opt4)) || (darkPieces.includes(opt3) && darkPieces.includes(opt4))) {
+                possibilities = []
+            }
+            //if a light piece or dark piece blocks one option, go for the other
+            else if((!darkPieces.includes(opt3) && darkPieces.includes(opt4)) || (!lightPieces.includes(opt3) && lightPieces.includes(opt4))) {
+                possibilities = [opt3]
+            }
+            //if a light piece or dark piece blocks one option, go for the other
+            else if((!darkPieces.includes(opt4) && darkPieces.includes(opt3)) || (!lightPieces.includes(opt4) && lightPieces.includes(opt3))){
+                possibilities = [opt4]
+            }
+            //if nothing blocks it, go for it
+            else {
+                possibilities = [opt3, opt4]
+            }
+        }
 
-        //check that both cells are blocked by other pieces
-        if((lightPieces.includes(opt1) && lightPieces.includes(opt2)) || (darkPieces.includes(opt1) && darkPieces.includes(opt2))) {
-            setPossibleCells([])
+        //check that cells are blocked by pieces of different colors(black blocking first, white blocking second)
+
+        //if it is a black cell blocking the first cell and a light blocking the second
+
+        //if it is a darkpiece being moved...?
+        else if(darkPieces.includes(id) && darkPieces.includes(opt1) && lightPieces.includes(opt2)) {
+            //if behind the light piece is another black or white piece do nothing
+            if(darkPieces.includes(opt4) || lightPieces.includes(opt4)) {
+                possibilities = []
+            }
+            //otherwise, go for it
+            else {
+                possibilities = [opt4]
+            }
         }
-        //check that cells are blocked by pieces of different colors
-        else if((darkPieces.includes(opt1) && lightPieces.includes(opt2)) || (lightPieces.includes(opt1) && darkPieces.includes(opt2))) {
-            setPossibleCells([])
+        //if it is a lightpiece being moved...?
+        else if(lightPieces.includes(id) && darkPieces.includes(opt1) && lightPieces.includes(opt2)) {
+            //if behind the dark cell there is a light or dark cell behind it do nothing
+            if(darkPieces.includes(opt3) || lightPieces.includes(opt3)) {
+                possibilities = []
+            }
+            //otherwise go for it
+            else {
+                possibilities = [opt3]
+            }
         }
+
+        //check that cells are blocked by pieces of different colors(white blocking first, black blocking second)
+        
+        //if it is a dark piece being moved
+        else if(darkPieces.includes(id) && lightPieces.includes(opt1) && darkPieces.includes(opt2)){
+            //if there is a piece behind the cell you want to capture, do nothing
+            if(darkPieces.includes(opt3) || lightPieces.includes(opt3)) {
+                possibilities = []
+            }
+            //otherwise do nothing
+            else {
+                possibilities = [opt3]
+            }
+        }
+        //if it is a light piece you want to move,...?
+        else if(lightPieces.includes(id) && lightPieces.includes(opt1) && darkPieces.includes(opt2)){
+            //if there is a light or dark cell behid the cell you want to capture, do nothing
+            if(darkPieces.includes(opt4) || lightPieces.includes(opt4)) {
+                possibilities = []
+            }
+            //otherwise go for it
+            else {
+                possibilities = [opt4]
+            }
+        }
+
         //check that one cell is blocked by another piece
-        else if((lightPieces.includes(opt1) && !lightPieces.includes(opt2)) || (darkPieces.includes(opt1) && !darkPieces.includes(opt2)) ) {
-            setPossibleCells([opt2])
+
+        //if it's a dark piece you're moving blocked by a light piece
+        else if(darkPieces.includes(id) && lightPieces.includes(opt1) && !lightPieces.includes(opt2)) {
+            //if the cell behind the cell you want to capture is blocked, only display other option
+            if(lightPieces.includes(opt3) || darkPieces.includes(opt3)) {
+                possibilities = [opt2]
+            }
+            //otherwise, choose to capture or move
+            else {
+                possibilities = [opt2, opt3]
+            }
         }
+        //if it's a light piece blocked by a light piece move to the open space
+        else if(lightPieces.includes(id) && lightPieces.includes(opt1) && !lightPieces.includes(opt2)) {
+            possibilities = [opt2]
+        }
+
+        //if it's a dark piece blocked by a dark piece move to the open space
+        else if(darkPieces.includes(id) && darkPieces.includes(opt1) && !darkPieces.includes(opt2)) {
+            possibilities = [opt2]
+        }
+        //if it's a light piece blocked by a dark piece
+        else if(lightPieces.includes(id) &&  darkPieces.includes(opt1) && !darkPieces.includes(opt2)) {
+            //if the cell behind the cell you want to capture is blocked, only display other option
+            if(lightPieces.includes(opt3) || darkPieces.includes(opt3)) {
+                possibilities = [opt2]
+            }
+            //otherwise, choose to capture or move
+            else {
+                possibilities = [opt2, opt3]
+            }
+        }
+
         //check that one cell is blocked by another piece
-        else if((lightPieces.includes(opt2) && !lightPieces.includes(opt1)) || (darkPieces.includes(opt2) && !darkPieces.includes(opt1)) ) {
-            setPossibleCells([opt1])
+
+        //if dark piece is blocked by a light piece
+        else if(darkPieces.includes(id) && lightPieces.includes(opt2) && !lightPieces.includes(opt1)) {
+            //check that the cell behind the one you want to capture is free, if not display only the move action
+            if(darkPieces.includes(opt4) || lightPieces.includes(opt4)) {
+                possibilities = [opt1]
+            }
+            //otherwise, display both options
+            else {
+                possibilities = [opt1, opt4]
+            }
+        }
+        //if lightpiece blocked by light piece, move to open slot
+        else if(lightPieces.includes(id) && lightPieces.includes(opt2) && !lightPieces.includes(opt1)) {
+            possibilities = [opt1]
+        }
+
+        //if dark piece blocked by dark piece, move to open slot
+        else if(darkPieces.includes(id) && darkPieces.includes(opt2) && !darkPieces.includes(opt1)) {
+            possibilities = [opt1]
+        }
+        //if light piece is piece being moved
+        else if(lightPieces.includes(id) && darkPieces.includes(opt2) && !darkPieces.includes(opt1)) {
+            //if the cell behind the piece you want to capture is blocked, do nothing except move to other slot
+            if(darkPieces.includes(opt4) || lightPieces.includes(opt4)) {
+                possibilities = [opt1]
+            }
+            //otherwise display both options
+            else {
+                possibilities = [opt1, opt4]
+            }
         }
         //if not blocked
         else{
-            setPossibleCells([opt1, opt2])
+            possibilities = [opt1, opt2]
         }
+        
+        //add the possible cells to state
+        setPossibleCells(possibilities)
         //add the id of the piece to be moved
         setToBeMoved(id)
-    }
-
-
-    //function for removing pieces
-    const removePiece = id => {
-        if(darkPieces.includes(id)){
-            return darkPieces.filter(piece => piece !== id)
-        }
-        else if(lightPieces.includes(id)) {
-            return lightPieces.filter(piece => piece !== id)
-        }
-    }
-    const capturePiece = id => {
-        
-    }
-
-    //function for moving pieces
-    const movePiece = (newid) =>{
-        if(darkPieces.includes(toBeMoved)) {
-            //create a new array without the piece you want to move then add the new piece to the array and set to state
-            const newDark = removePiece(toBeMoved)
-            setDarkPiece([...newDark, newid])
-        }else if(lightPieces.includes(toBeMoved)) {
-            //create a new array without the piece you want to move then add the new piece to the array and set to state
-            const newLight = removePiece(toBeMoved)
-            setLightPiece([...newLight, newid])
-        }
-        //set state of possible options to normal which is none
-        setPossibleCells([])
     }
 
     return (

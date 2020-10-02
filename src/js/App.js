@@ -11,7 +11,7 @@ const App = () => {
         <div className="row">
             <GamePlayContextProvider>
                 <Board />
-                <Instructions />
+                {/* <Instructions /> */}
             </GamePlayContextProvider>
         </div>
         </>
