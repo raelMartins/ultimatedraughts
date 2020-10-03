@@ -111,8 +111,8 @@ const GamePlayContextProvider = (props) => {
                 opt4 = null
             }
             else if(DarkLeftCapture.includes(id)) {
-                opt3 = null
-                opt4 = id - 9
+                opt3 = id - 9
+                opt4 = null
             }
 
         }
@@ -141,8 +141,8 @@ const GamePlayContextProvider = (props) => {
                 opt4 = id + 9
             }
             else if(LightRightCapture.includes(id)) {
-                opt3 = null
-                opt4 = id + 9
+                opt3 = id + 9
+                opt4 = null
             }
             else if(LightLeftCapture.includes(id)) {
                 opt3 = id + 7
