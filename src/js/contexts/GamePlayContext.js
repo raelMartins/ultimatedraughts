@@ -14,6 +14,16 @@ const GamePlayContextProvider = (props) => {
     const [gamePlaying, setGamePlaying] = useState(true)
     const [capturedLight, setCapturedLight] = useState(0)
     const [capturedDark, setCapturedDark] = useState(0)
+    //a function to start a new game
+    const newGame = () => {
+        setPlayer('Player 1')
+        setLightPiece([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        setDarkPiece([31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20])
+        setPossibleCells([])
+        setCapturedDark(0)
+        setCapturedLight(0)
+        setToBeMoved()
+    }
 
     //a function to generate the board dynamically
     const createBoard = () => {
@@ -410,7 +420,7 @@ const GamePlayContextProvider = (props) => {
     }
 
     return (
-        <GamePlayContext.Provider value={{createBoard, darkPieces, lightPieces, displayMove, movePiece, player, capturedDark, capturedLight}}>
+        <GamePlayContext.Provider value={{createBoard, darkPieces, lightPieces, displayMove, movePiece, player, capturedDark, capturedLight, newGame}}>
             { props.children }
         </GamePlayContext.Provider>
     );

@@ -1,0 +1,21 @@
+.game-buttons {
+    margin: auto;
+    text-align: center;
+    .new-game, .pause-game {
+        width: auto;
+        margin: 10px 2px;
+        
+        background-color: lighten($backgroundColor, 6);
+        color: rgb(207, 143, 58);
+        border: none;
+        transition: background-color 0.5s;
+        &:hover, &:active, &:focus {
+            outline: none;
+            box-shadow: none;
+            border: none;
+        }
+        &:hover, &:active {
+            background-color:  $backgroundColor;
+        }
+    }
+}

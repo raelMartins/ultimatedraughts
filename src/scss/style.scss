@@ -2,6 +2,7 @@
 @import './variables.scss';
 @import './board.scss';
 @import './boardPiece.scss';
+@import './gamebuttons.scss';
 
 body {
     max-height: 100vh;
@@ -14,23 +15,45 @@ body {
     color: whitesmoke;
     font-family: 'MedievalSharp', cursive;
 }
-
 .game-title {
     background-color: lighten($backgroundColor,7);
     .title {
         text-align: center;
         padding: 20px;
+
+    }
+}
+
+.right {
+    margin: 5px auto;
+    // text-align: center;
+    .player-name {
+        text-align: center;
+        color: darken($backgroundColor, 3);
+        margin-bottom: none;
+        margin-top: none;
+        height: 87px;
+        .active-player {
+            background-color: $backgroundColor;
+            position: relative;
+            top: -3px;
+            height: 7.5px;
+            width: 7.5px;
+            border-radius: 50%;
+            margin-left: 20px;
+            display: inline-flex;
+        }
+        .captured-pieces {
+            display: inline-flex;
+            margin: auto;
+            max-width: 500px;
+            height: 55px;
+        }
     }
 }
 
 .left {
-    margin-top: 15px;
-    text-align: center;
-    color: lighten($backgroundColor, 4)
-}
-
-.right {
-    margin-top: 15px;
+    margin-top: 45px;
     text-align: center;
     .instructions {
         height: 500px;
@@ -45,6 +68,8 @@ body {
         padding-top: 65px;
         color: $backgroundColor;
         .instructions-text {
+            height: 300px;
+            font-size: 12px;
             overflow-y: auto;
             width: 65%;
             margin: auto;
