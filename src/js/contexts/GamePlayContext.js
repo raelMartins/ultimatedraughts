@@ -55,10 +55,16 @@ const GamePlayContextProvider = (props) => {
         const darkmidCells = [0, 1, 2, 8, 9, 10, 16, 17, 18, 24, 25, 26]
         const leftEdgeCells = [4, 12, 20, 28];
         const rightEdgeCells = [3, 11, 19, 27];
+
+
+        //SCENARIOS
+        const DarkSelected = darkPieces.includes(toBeMoved) ? true : false;
+        const LightSelected = lightPieces.includes(toBeMoved) ? true : false;
+
         let newlight, newdark;
 
         //if the piece you want to move is a dark piece
-        if(darkPieces.includes(toBeMoved)) {
+        if(DarkSelected) {
             //remove it and add a it's new piece/poition to te dark pieces array
             changePiecePosition(id)
             
@@ -87,7 +93,7 @@ const GamePlayContextProvider = (props) => {
             newlight !== undefined && setLightPiece([...newlight])
             newlight !== undefined && setCapturedLight(12 - newlight.length)
             
-        }else if (lightPieces.includes(toBeMoved)) {
+        }else if (LightSelected) {
             //remove it and add a it's new piece/poition to te dark pieces array
             changePiecePosition(id)
             
@@ -413,6 +419,7 @@ const GamePlayContextProvider = (props) => {
         else{
             possibilities = [opt1, opt2]
         }
+
         //add the possible cells to state
         setPossibleCells(possibilities)
         //add the id of the piece to be moved

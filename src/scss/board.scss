@@ -1,13 +1,12 @@
 .board {
-    width: 430px;
+    width: 340px;
     margin: 0px auto ;
-    margin-right: 20px;
-    padding: 15px;
+    padding: 10px;
     display: grid;
     background-color: $backgroundColor;
     border-radius: 5px;
-    grid-template-columns: repeat(8, 50px);
-    grid-template-rows: repeat(8, 50px);
+    grid-template-columns: repeat(8, 40px);
+    grid-template-rows: repeat(8, 40px);
     .board-cell {
         position: relative;
     }

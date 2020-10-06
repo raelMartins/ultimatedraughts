@@ -23,7 +23,7 @@ const Board = () => {
     }
 
     return(
-        <div className="right col-md-5">
+        <div className="col-md-5 right">
             <div className="player-name">
                 <h5>Player 1 { player === 'Player 1' ? <span className="active-player"></span> : null}</h5>
                 <div className="captured-pieces">{darkCaptured()}</div>

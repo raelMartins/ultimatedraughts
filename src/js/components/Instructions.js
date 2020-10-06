@@ -2,7 +2,7 @@ import React from 'react';
 
 const Instructions = () => {
     return(
-        <div className="left col-md-5">
+        <div className="col-md-5 left">
             <div className="instructions">
                 <h5>RULES</h5>
                 <p className="instructions-text">
