@@ -8,7 +8,6 @@ const Board = () => {
     const darkCaptured = () =>{
         let dark = [];
         for(let i = 0; i < capturedDark; i++) {
-            console.log(capturedDark)
             dark[i] = <BoardPiece pieceColor = "dark" key={i}/>
         }
         return dark
@@ -16,7 +15,6 @@ const Board = () => {
     const lightCaptured = () =>{
         let light = [];
         for(let i = 0; i < capturedLight; i++) {
-            console.log(capturedLight)
             light[i] = <BoardPiece pieceColor = "light" key={i}/>
         }
         return light
