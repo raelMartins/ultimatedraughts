@@ -16,6 +16,7 @@ const GamePlayContextProvider = (props) => {
     const [gamePlaying, setGamePlaying] = useState(true)
     const [capturedLight, setCapturedLight] = useState(0)
     const [capturedDark, setCapturedDark] = useState(0)
+    const [winner, setWinner] = useState('')
     //a function to start a new game
     const newGame = () => {
         setPlayer('Player 1')
@@ -26,7 +27,10 @@ const GamePlayContextProvider = (props) => {
         setPossibleCells([])
         setCapturedDark(0)
         setCapturedLight(0)
+        setGamePlaying(true)
         setToBeMoved()
+        setWinner('')
+        
     }
 
     //a function to generate the board dynamically
@@ -41,7 +45,7 @@ const GamePlayContextProvider = (props) => {
             }
             //check if one of the cells is one you want to move to
             else if(possibleCells.includes(gamePlayCells.indexOf(i))) {
-                boardCells[i] = <BoardCell key={i} id={ids++} cellType="possible-cell" movePiece={movePiece}/>
+                boardCells[i] = <BoardCell key={i} id={ids++} cellType="possible-cell" movePiece={movePiece} changePiecePosition={changePiecePosition}/>
             }
             //otherwise create a blank cell
             else {
@@ -52,11 +56,12 @@ const GamePlayContextProvider = (props) => {
         return boardCells;    
     }
 
+
     //function for capturing pieces
     const movePiece = id => {
 
-        const lightmidCells = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31]
-        const darkmidCells = [0, 1, 2, 8, 9, 10, 16, 17, 18, 24, 25, 26]
+        const cellTypeA = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31]
+        const cellTypeB = [0, 1, 2, 8, 9, 10, 16, 17, 18, 24, 25, 26]
         const leftEdgeCells = [4, 12, 20, 28];
         const rightEdgeCells = [3, 11, 19, 27];
 
@@ -64,65 +69,223 @@ const GamePlayContextProvider = (props) => {
         //SCENARIOS
         const DarkSelected = darkPieces.includes(toBeMoved) ? true : false;
         const LightSelected = lightPieces.includes(toBeMoved) ? true : false;
+        const DarkKingSelect = darkKings.includes(toBeMoved) ? true : false;
+        const LightKingSelect = lightKings.includes(toBeMoved) ? true : false;
 
-        let newlight, newdark;
+        let newlight, newdark, newdarkkings, newlightkings;
 
         //if the piece you want to move is a dark piece
         if(DarkSelected) {
             //remove it and add a it's new piece/poition to te dark pieces array
             changePiecePosition(id)
-            
             //then check if the difference between the piece you were moving and the place you moved is 7
             if(toBeMoved - id === 7) {
-                if(darkmidCells.includes(toBeMoved) && lightPieces.includes(toBeMoved - 3)) {
-                    newlight = lightPieces.filter(el => el !== toBeMoved - 3)
-                }
-                else if(!darkmidCells.includes(toBeMoved) && lightPieces.includes(toBeMoved - 4)) {
+                if(leftEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
                     newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
+                }
+                if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 3) || lightKings.includes(toBeMoved - 3)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 3)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 3)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
                 }
             }
             else if(toBeMoved - id === 9) {
-                if(darkmidCells.includes(toBeMoved) && lightPieces.includes(toBeMoved - 4)) {
+                if(rightEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
                     newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
                 }
-                else if(rightEdgeCells.includes(toBeMoved) && lightPieces.includes(toBeMoved - 4)) {
+                else if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
                     newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
                 }
-                else if(!darkmidCells.includes(toBeMoved) && lightPieces.includes(toBeMoved - 5)) {
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 5) || lightKings.includes(toBeMoved - 5)) ){
                     newlight = lightPieces.filter(el => el !== toBeMoved - 5)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 5)
                 }
-
             }
             newlight !== undefined && setLightPiece([...newlight])
-            newlight !== undefined && setCapturedLight(12 - newlight.length)
+            newlightkings !== undefined && setLightKings([...newlightkings])
+            newlight !== undefined && setCapturedLight(12 - (newlight.length + newlightkings.length))
+            if(newlight!== undefined && newlightkings.length !== undefined && newlight.length + newlightkings.length === 0){
+                setGamePlaying(false)
+                setWinner('Player 2')
+            }  
             
         }else if (LightSelected) {
             //remove it and add a it's new piece/poition to te dark pieces array
             changePiecePosition(id)
-            
             if(id - toBeMoved === 7) {
-                if(lightmidCells.includes(toBeMoved) && darkPieces.includes(toBeMoved + 3)) {
-                    newdark = darkPieces.filter(el => el !== toBeMoved + 3)
-                }
-                else if(!lightmidCells.includes(toBeMoved) && darkPieces.includes(toBeMoved + 4)) {
+                if(rightEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ){
                     newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 3) || darkKings.includes(toBeMoved + 3)) ) {
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 3)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 3)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ) {
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
                 }
             }
             else if(id - toBeMoved === 9) {
-                if(lightmidCells.includes(toBeMoved) && darkPieces.includes(toBeMoved + 4)) {
+                if(leftEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ) {
                     newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
                 }
-                else if(leftEdgeCells.includes(toBeMoved) && darkPieces.includes(toBeMoved + 4)) {
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ){
                     newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
                 }
-                else if(!lightmidCells.includes(toBeMoved) && darkPieces.includes(toBeMoved + 5)) {
+                else if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 5) || darkKings.includes(toBeMoved + 5)) ){
                     newdark = darkPieces.filter(el => el !== toBeMoved + 5)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 5)
                 }
             }
             newdark !== undefined && setDarkPiece([...newdark])
-            newdark !== undefined && setCapturedDark(12 - newdark.length)   
+            newdarkkings !== undefined && setDarkKings([...newdarkkings])
+            newdark !== undefined && setCapturedDark(12 - (newdark.length + newdarkkings.length))
+            if(newdark!== undefined && newdarkkings.length !== undefined && newdark.length + newdarkkings.length === 0){
+                setGamePlaying(false)
+                setWinner('Player 1')
+            }   
         }
-        
+        else if(DarkKingSelect) {
+            changePiecePosition(id)
+            if(id - toBeMoved === 7) {
+                if(rightEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 4) || lightKings.includes(toBeMoved + 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 3) || lightKings.includes(toBeMoved + 3)) ) {
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 3)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 3)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 4) || lightKings.includes(toBeMoved + 4)) ) {
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 4)
+                }
+            }
+            else if(id - toBeMoved === 9) {
+                if(leftEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 4) || lightKings.includes(toBeMoved + 4)) ) {
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 4) || lightKings.includes(toBeMoved + 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved + 5) || lightKings.includes(toBeMoved + 5)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved + 5)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved + 5)
+                }
+            }
+            else if(toBeMoved - id === 7) {
+                if(leftEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
+                }
+                if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 3) || lightKings.includes(toBeMoved - 3)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 3)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 3)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
+                }
+            }
+            else if(toBeMoved - id === 9) {
+                if(rightEdgeCells.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 4) || lightKings.includes(toBeMoved - 4)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 4)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (lightPieces.includes(toBeMoved - 5) || lightKings.includes(toBeMoved - 5)) ){
+                    newlight = lightPieces.filter(el => el !== toBeMoved - 5)
+                    newlightkings = lightKings.filter(el => el !== toBeMoved - 5)
+                }
+            }
+            newlight !== undefined && setLightPiece([...newlight])
+            newlightkings !== undefined && setLightKings([...newlightkings])
+            newlight !== undefined && setCapturedLight(12 - (newlight.length + newlightkings.length)) 
+            if(newlight!== undefined && newlightkings.length !== undefined && newlight.length + newlightkings.length === 0){
+                setGamePlaying(false)
+                setWinner('Player 2')
+            }   
+        }
+        else if(LightKingSelect) {
+            changePiecePosition(id)
+            if(id - toBeMoved === 7) {
+                if(rightEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 3) || darkKings.includes(toBeMoved + 3)) ) {
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 3)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 3)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ) {
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
+                }
+            }
+            else if(id - toBeMoved === 9) {
+                if(leftEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ) {
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 4) || darkKings.includes(toBeMoved + 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 4)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved + 5) || darkKings.includes(toBeMoved + 5)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved + 5)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved + 5)
+                }
+            }
+            else if(toBeMoved - id === 7) {
+                if(leftEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 4) || darkKings.includes(toBeMoved - 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 4)
+                }
+                if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 3) || darkKings.includes(toBeMoved - 3)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 3)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 3)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 4) || darkKings.includes(toBeMoved - 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 4)
+                }
+            }
+            else if(toBeMoved - id === 9) {
+                if(rightEdgeCells.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 4) || darkKings.includes(toBeMoved - 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 4)
+                }
+                else if(cellTypeB.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 4) || darkKings.includes(toBeMoved - 4)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 4)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 4)
+                }
+                else if(cellTypeA.includes(toBeMoved) && (darkPieces.includes(toBeMoved - 5) || darkKings.includes(toBeMoved - 5)) ){
+                    newdark = darkPieces.filter(el => el !== toBeMoved - 5)
+                    newdarkkings = darkKings.filter(el => el !== toBeMoved - 5)
+                }
+            }
+            newdark !== undefined && setDarkPiece([...newdark])
+            newdarkkings !== undefined && setDarkKings([...newdarkkings])
+            newdark !== undefined && setCapturedDark(12 - (newdark.length + newdarkkings.length))  
+            if(newdark!== undefined && newdarkkings.length !== undefined && newdark.length + newdarkkings.length === 0){
+                setGamePlaying(false)
+                setWinner('Player 1')
+            }  
+        }
     }
 
     // function for moving pieces
@@ -154,10 +317,12 @@ const GamePlayContextProvider = (props) => {
             setPlayer('Player 2')
         }else if(darkKings.includes(toBeMoved)) {
             const newDarkKing = removePiece(toBeMoved)
-            setDarkKings(...newDarkKing, newid)
+            setDarkKings([...newDarkKing, newid])
+            setPlayer('Player 1')
         }else if(lightKings.includes(toBeMoved)) {
             const newLightKing = removePiece(toBeMoved)
-            setLightKings(...newLightKing, newid)
+            setLightKings([...newLightKing, newid])
+            setPlayer('Player 2')
         }
         
         //set state of possible options to normal which is none
@@ -409,82 +574,85 @@ const GamePlayContextProvider = (props) => {
         //SCENARIOS
         const darkOn1 = darkPieces.includes(opt1) || darkKings.includes(opt1) ? true : false;
         const darkOn2 = darkPieces.includes(opt2) || darkKings.includes(opt2) ? true : false;
-        const darkNotOn1 = !darkPieces.includes(opt1) || !darkKings.includes(opt1) ? true : false;
-        const darkNotOn2 = !darkPieces.includes(opt2) || !darkKings.includes(opt2) ? true : false;
         const lightOn1 = lightPieces.includes(opt1) || lightKings.includes(opt1) ? true : false;
         const lightOn2 = lightPieces.includes(opt2) || lightKings.includes(opt2) ? true : false;
-        const lightNotOn1 = !lightPieces.includes(opt1) || !lightKings.includes(opt1) ? true : false;
-        const lightNotOn2 = !lightPieces.includes(opt2) || !lightKings.includes(opt2) ? true : false;
         const pieceOn3 = darkPieces.includes(opt3) || darkKings.includes(opt3) || lightPieces.includes(opt3) || lightKings.includes(opt3) ? true : false;
         const pieceOn4 = darkPieces.includes(opt4) || darkKings.includes(opt4) || lightPieces.includes(opt4) || lightKings.includes(opt4) ? true : false;
-        const noPieceOn3 = !darkPieces.includes(opt3) || !darkKings.includes(opt3) || !lightPieces.includes(opt3) || !lightKings.includes(opt3) ? true : false;
-        const noPieceOn4 = !darkPieces.includes(opt4) || !darkKings.includes(opt4) || !lightPieces.includes(opt4) || !lightKings.includes(opt4) ? true : false;
 
+        //KING SCENARIOS
+        const darkOn5 = darkPieces.includes(opt5) || darkKings.includes(opt5) ? true : false;
+        const darkOn6 = darkPieces.includes(opt6) || darkKings.includes(opt6) ? true : false;
+        const lightOn5 = lightPieces.includes(opt5) || lightKings.includes(opt5) ? true : false;
+        const lightOn6 = lightPieces.includes(opt6) || lightKings.includes(opt6) ? true : false;
+        const pieceOn7 = darkPieces.includes(opt7) || darkKings.includes(opt7) || lightPieces.includes(opt7) || lightKings.includes(opt7) ? true : false;
+        const pieceOn8 = darkPieces.includes(opt8) || darkKings.includes(opt8) || lightPieces.includes(opt8) || lightKings.includes(opt8) ? true : false;
         //HERE WE WILL CHECK POSSIBLE DRAUGHTS SCENARIOS. 
         //USE THE VARIABLE NAMES IN THE IF PARAMETERS TO UNDERSTAND WHAT WAS CHECKED
 
         let possibilities;
         if(darkSelected) {
-            if(darkOn1 && darkOn2) {possibilities = []}
-            else if(lightOn1 && lightOn2) {
-                if(pieceOn3 && pieceOn4) {possibilities = []}
-                else if(noPieceOn3 && pieceOn4) {possibilities = [opt3]}
-                else if(noPieceOn4 && pieceOn3){possibilities = [opt4]}
-                else {possibilities = [opt3, opt4]}
+            let a, b
+            darkOn1 ? a = null : a = opt1;
+            darkOn2 ? b = null: b = opt2;
+            if(lightOn1) {
+                pieceOn3 ? a = null : a = opt3;
             }
-            else if(darkOn1 && lightOn2) {
-                if(pieceOn4) {possibilities = []}
-                else {possibilities = [opt4]}
+            if(lightOn2) {
+                pieceOn4 ? b = null : b = opt4
             }
-            else if(lightOn1 && darkOn2){
-                if(pieceOn3) {possibilities = []}
-                else {possibilities = [opt3]}
-            }
-            else if(lightOn1 && lightNotOn2) {
-                if(pieceOn3) {possibilities = [opt2]}
-                else {possibilities = [opt2, opt3]}
-            }
-            else if(lightOn2 && lightNotOn1) {
-                if(pieceOn4) {possibilities = [opt1]}
-                else {possibilities = [opt1, opt4]}
-            }
-            else if(darkOn1 && darkNotOn2) {possibilities = [opt2]}
-            else if(darkOn2 && darkNotOn1) {possibilities = [opt1]}
-            else{possibilities = [opt1, opt2]}
+            possibilities = [a, b]
         }
         else if(lightSelected) {
-            if(lightOn1 && lightOn2) {possibilities = []}
-            else if(darkOn1 && darkOn2) {
-                if(pieceOn3 && pieceOn4) {possibilities = []}
-                else if(noPieceOn3 && pieceOn4) {possibilities = [opt3]}
-                else if(noPieceOn4 && pieceOn3){possibilities = [opt4]}
-                else {possibilities = [opt3, opt4]}
+            let a, b
+            lightOn1 ? a = null : a = opt1;
+            lightOn2 ? b = null: b = opt2;
+            if(darkOn1) {
+                pieceOn3 ? a = null : a = opt3;
             }
-            else if(darkOn1 && lightOn2) {
-                if(pieceOn3) {possibilities = []}
-                else {possibilities = [opt3]}
+            if(darkOn2) {
+                pieceOn4 ? b = null : b = opt4
             }
-            else if(lightOn1 && darkOn2){
-                if(pieceOn4) {possibilities = []}
-                else {possibilities = [opt4]}
-            }
-            else if(darkOn1 && darkNotOn2) {
-                if(pieceOn3) {possibilities = [opt2]}
-                else {possibilities = [opt2, opt3]}
-            }
-            else if(darkOn2 && darkNotOn1) {
-                if(pieceOn4) {possibilities = [opt1]}
-                else {possibilities = [opt1, opt4]}
-            }
-            else if(lightOn1 && lightNotOn2) {possibilities = [opt2]}
-            else if(lightOn2 && lightNotOn1) {possibilities = [opt1]}
-            else{possibilities = [opt1, opt2]}
+            possibilities = [a, b]
         }
         else if(darkKingSelected) {
-            console.log('Dark King')
+            let a, b, c, d;
+            darkOn1 ? a = null : a = opt1;
+            darkOn2 ? b = null : b = opt2;
+            darkOn5 ? c = null : c = opt5;
+            darkOn6 ? d = null : d = opt6;
+            if(lightOn1){
+                pieceOn3 ? a = null : a = opt3;
+            }
+            if(lightOn2){
+                pieceOn4 ? b = null : b = opt4;
+            }
+            if(lightOn5){
+                pieceOn7 ? c = null : c = opt7;
+            }
+            if(lightOn6){
+                pieceOn8 ? d = null : d = opt8;
+            }
+            possibilities = [a, b, c, d]
         }
         else if(lightKingSelected) {
-            console.log('Light King')
+            let a, b, c, d;
+            lightOn1 ? a = null : a = opt1;
+            lightOn2 ? b = null : b = opt2;
+            lightOn5 ? c = null : c = opt5;
+            lightOn6 ? d = null : d = opt6;
+            if(darkOn1){
+                pieceOn3 ? a = null : a = opt3;
+            }
+            if(darkOn2){
+                pieceOn4 ? b = null : b = opt4;
+            }
+            if(darkOn5){
+                pieceOn7 ? c = null : c = opt7;
+            }
+            if(darkOn6){
+                pieceOn8 ? d = null : d = opt8;
+            }
+            possibilities = [a, b, c, d]        
         }
         setPossibleCells(possibilities)
         //add the id of the piece to be moved
@@ -493,7 +661,7 @@ const GamePlayContextProvider = (props) => {
     
 
     return (
-        <GamePlayContext.Provider value={{createBoard, darkPieces, lightPieces, darkKings, lightKings, displayMove, movePiece, player, capturedDark, capturedLight, newGame}}>
+        <GamePlayContext.Provider value={{createBoard, darkPieces, lightPieces, darkKings, lightKings, displayMove, movePiece, player, capturedDark, capturedLight, newGame, gamePlaying, winner}}>
             { props.children }
         </GamePlayContext.Provider>
     );

@@ -4,7 +4,7 @@ import BoardPiece from './BoardPiece';
 
 const Board = () => {
 
-    const { createBoard, capturedDark, capturedLight, player } = useContext(GamePlayContext)
+    const { createBoard, capturedDark, capturedLight, player, gamePlaying, winner } = useContext(GamePlayContext)
     const darkCaptured = () =>{
         let dark = [];
         for(let i = 0; i < capturedDark; i++) {
@@ -23,7 +23,7 @@ const Board = () => {
     return(
         <div className="col-md-5 right">
             <div className="player-name">
-                <h5>Player 1 { player === 'Player 1' ? <span className="active-player"></span> : null}</h5>
+                <h5>Player 1 {winner === 'Player 1' ? " WINS!!!" : null}{ player === 'Player 1' && gamePlaying? <span className="active-player"></span> : null}</h5>
                 <div className="captured-pieces">{darkCaptured()}</div>
             </div>
             <div className="board">
@@ -31,7 +31,7 @@ const Board = () => {
             </div>
             <div className="player-name">
                 <div className="captured-pieces">{lightCaptured()}</div>
-                <h5>Player 2 { player === 'Player 2' ? <span className="active-player"></span> : null}</h5>
+                <h5>Player 2 {winner === 'Player 2' ? " WINS!!!" : null}{ player === 'Player 2' && gamePlaying ? <span className="active-player"></span> : null}</h5>
             </div>
             
         </div>
