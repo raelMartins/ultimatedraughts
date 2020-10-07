@@ -5,74 +5,90 @@
 @import './gamebuttons.scss';
 
 body {
-    max-height: 100vh;
-    max-width: 100vw;
-    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
     background-image: url('../img/background.jpg');
     background-position: center;
-    background-repeat: none;
+    background-repeat: no-repeat;
     background-size: cover;
     color: whitesmoke;
     font-family: 'MedievalSharp', cursive;
+}
+.row {
+    width: 100%;
+    margin: 0px;
 }
 .game-title {
     background-color: lighten($backgroundColor,7);
     .title {
         text-align: center;
-        padding: 20px;
-
+        margin: 0px;
+        padding: 15px;
+    }
+}
+.left {
+    margin-top: 45px;
+    margin: auto;
+    padding: 0px;
+    text-align: center;
+    .instructions {
+        background-image: url('../img/rulesscroll.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: cover;
+        min-height: 500px;
+        position: relative;
+        margin: 20px auto;
+        padding-top: 65px;
+        color: $backgroundColor;
+        h5 {
+            position: absolute;
+            top: 65px;
+            left: 180px;
+        }
+        .instructions-text {
+            position: absolute;
+            top: 100px;
+            left: 75px;
+            min-height: 280px;
+            max-height: 340px;
+            width: 280px;
+            max-width: 60%;
+            margin: auto;
+            font-size: 11px;
+            overflow-y: auto;
+        }
     }
 }
 
 .right {
-    margin: 5px auto;
+    // margin: 10px auto;
     // text-align: center;
+    padding: 0px;
     .player-name {
         text-align: center;
         color: darken($backgroundColor, 3);
-        margin-bottom: none;
-        margin-top: none;
-        height: 87px;
+        margin: 5px;
+        height: 75px;
+        h5{
+            padding: 5px;
+            margin: 0px;
+        }
         .active-player {
             background-color: $backgroundColor;
+            display: inline-flex;
             position: relative;
             top: -3px;
             height: 7.5px;
             width: 7.5px;
             border-radius: 50%;
             margin-left: 20px;
-            display: inline-flex;
         }
         .captured-pieces {
             display: inline-flex;
             margin: auto;
-            max-width: 500px;
-            height: 55px;
         }
     }
 }
 
-.left {
-    margin-top: 45px;
-    text-align: center;
-    .instructions {
-        height: 500px;
-        // min-height: 450px;
-        background-image: url('../img/rulesscroll.png');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: cover;
-        // min-width: 350px;
-        width: 400px;
-        margin: 20px auto;
-        padding-top: 65px;
-        color: $backgroundColor;
-        .instructions-text {
-            height: 300px;
-            font-size: 12px;
-            overflow-y: auto;
-            width: 65%;
-            margin: auto;
-        }
-    }
-}
