@@ -4,16 +4,27 @@
 @import './boardPiece.scss';
 @import './gamebuttons.scss';
 
-body {
+.content, .dark-content {
     width: 100%;
     min-height: 100vh;
     height: 100%;
+    color: whitesmoke;
+    font-family: 'MedievalSharp', cursive;
+    transition: 0.5s;
+}
+.content {
+    background-color: $mainBackground;
     background-image: url('../img/background.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    color: whitesmoke;
-    font-family: 'MedievalSharp', cursive;
+}
+.dark-content {
+    background-color: $mainBackground;
+    background-image: url('../img/black-background-wallpaper-1.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .row {
     width: 100%;
@@ -21,10 +32,13 @@ body {
 }
 .game-title {
     background-color: lighten($backgroundColor,7);
+    transition: 0.5s;
     .title {
+        color:rgb(211, 208, 208);
         text-align: center;
         margin: 0px;
         padding: 15px;
+        transition: 0.5s;
     }
 }
 .left {
@@ -32,39 +46,69 @@ body {
     margin: auto;
     padding: 0px;
     text-align: center;
-    .instructions {
-        background-image: url('../img/rulesscroll.png');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: cover;
-        min-height: 500px;
+    .instructions, .dark-instructions {
+        height: 500px;
         position: relative;
         margin: 20px auto;
-        padding-top: 65px;
-        color: $backgroundColor;
+        transition: 0.5s;
+        .instructions-scroll{
+            position: relative;
+            height: 500px;
+            width: 100%;
+            padding: 0px 5%;
+            transition: 0.5s;
+        }
         h5 {
+            width: 100%;
+        }
+        .instructions-body{
             position: absolute;
-            top: 65px;
-            left: 180px;
+            top: 80px;
+            width: 100%;
+            padding: 0px 22%;
         }
         .instructions-text {
-            position: absolute;
-            top: 100px;
-            left: 75px;
-            min-height: 280px;
-            max-height: 340px;
-            width: 280px;
-            max-width: 60%;
+            height: 320px;
+            max-width: 97%;
+            padding: 0px 3%;
             margin: auto;
             font-size: 11px;
             overflow-y: auto;
         }
     }
+    .instructions {
+        color: $backgroundColor;
+        .instructions-text {
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: $scrollColor; 
+                border-radius: 5px;
+                &:hover{
+                    background: darken($scrollColor, $amount: 4);
+                }
+            }
+        }
+    }
+    .dark-instructions {
+        color:black;
+        .instructions-text {
+            &::-webkit-scrollbar {
+                width: 5px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: grey; 
+                border-radius: 5px;
+                &:hover{
+                    background: darken($color: grey, $amount: 4);
+                }
+            }
+        }
+    }
 }
 
 .right {
-    // margin: 10px auto;
-    // text-align: center;
     padding: 0px;
     .player-name {
         text-align: center;
@@ -74,6 +118,7 @@ body {
         h5{
             padding: 5px;
             margin: 0px;
+            transition: color 0.5s;
         }
         .active-player {
             background-color: $backgroundColor;
@@ -84,6 +129,7 @@ body {
             width: 7.5px;
             border-radius: 50%;
             margin-left: 20px;
+            transition: background-color 0.5s;
         }
         .captured-pieces {
             display: inline-flex;

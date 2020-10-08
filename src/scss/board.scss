@@ -3,10 +3,11 @@
     margin: 0px auto ;
     padding: 10px;
     display: grid;
-    background-color: $backgroundColor;
+    background-color:$backgroundColor;
     border-radius: 5px;
     grid-template-columns: repeat(8, 40px);
     grid-template-rows: repeat(8, 40px);
+    transition: 1s;
     .board-cell {
         position: relative;
     }
@@ -22,9 +23,11 @@
     // }
     .gameplay-cell {
         background-color: $cellColor;
+        transition: background-color 1s;
     }
     .blank-cell {
         background-color: $inactiveCell;
+        transition: background-color 1s;
     }
     .possible-cell {
         background-color: teal;
