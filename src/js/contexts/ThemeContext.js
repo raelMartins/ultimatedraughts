@@ -1,10 +1,10 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 
 export const ThemeContext = createContext();
 
 const ThemeContextProvider = (props) => {
     const [isDark, setIsDark] = useState(false)
-    const [darkTheme, setDarkTheme] = useState({
+    const [darkTheme] = useState({
         text: ' rgb(211, 208, 208)',
         cellColor: 'rgb(76, 69, 69)',
         inactiveCell: ' rgb(211, 208, 208)',
