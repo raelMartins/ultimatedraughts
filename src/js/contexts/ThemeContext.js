@@ -11,6 +11,7 @@ const ThemeContextProvider = (props) => {
         boardBackground: 'rgb(17, 15, 15)',
         buttonColor: ' rgb(76, 69, 69)',
         activePlayer: 'green',
+        boardBorder: '10px solid rgb(17, 15, 15)'
     })
     const changeTheme = () => {
         let newTheme = !isDark

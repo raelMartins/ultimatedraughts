@@ -29,7 +29,7 @@ const Board = () => {
                 <h5 style={isDark ? {color: darkTheme.text}: {}}>Player 1 {winner === 'Player 1' ? " WINS!!!" : null}{ player === 'Player 1' && gamePlaying? <span className="active-player" style={isDark ? {backgroundColor: darkTheme.activePlayer}: {}}></span> : null}</h5>
                 <div className="captured-pieces">{darkCaptured()}</div>
             </div>
-            <div className="board" style={isDark ? {backgroundColor: darkTheme.boardBackground} : {}}>
+            <div className="board" style={isDark ? {border: darkTheme.boardBorder} : {}}>
                 { createBoard() }
             </div>
             <div className="player-name">
