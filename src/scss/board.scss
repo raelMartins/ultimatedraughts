@@ -1,9 +1,8 @@
 .board {
     width: 340px;
     margin: 0px auto ;
-    padding: 10px;
     display: grid;
-    background-color:$backgroundColor;
+    border: 10px solid $backgroundColor;
     border-radius: 5px;
     grid-template-columns: repeat(8, 40px);
     grid-template-rows: repeat(8, 40px);
